@@ -1,0 +1,34 @@
+.cytoscape-wrap {
+  height: 500px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.cytoscape-wrap .cytoscape-header {
+  border-bottom: 1px #f5f7f7 solid;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.cytoscape-wrap .cytoscape-header .cytoscape-actions-slider {
+  width: 180px;
+  height: 30px;
+}
+.cytoscape-wrap .cytoscape-header .cytoscape-actions-buttons {
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+.cytoscape-wrap .cytoscape-header .cytoscape-actions-buttons span {
+  margin-right: 8px;
+  color: #8e9ca8;
+}
+.cytoscape-wrap .cytoscape-header .cytoscape-layout {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+.cytoscape-wrap .cytoscape-body {
+  flex: 1;
+}
