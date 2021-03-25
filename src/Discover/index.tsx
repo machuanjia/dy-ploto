@@ -1,7 +1,7 @@
 /*
  * @Author: D.Y
  * @Date: 2021-03-24 11:48:59
- * @LastEditTime: 2021-03-24 19:16:42
+ * @LastEditTime: 2021-03-25 09:25:38
  * @LastEditors: D.Y
  * @FilePath: /dy-ploto/src/Discover/index.tsx
  * @Description:
@@ -24,7 +24,12 @@ import 'cytoscape-context-menus/cytoscape-context-menus.css'
 import 'cytoscape-navigator/cytoscape.js-navigator.css'
 
 type IProdCytoscapeProps = {
-  data:unknown[]
+  data?:unknown[]
+  edgeTap?:(source:unknown)=>void
+  nodeTap?:(source:unknown)=>void
+  cxtEdge?:(source:unknown)=>void
+  cxtNode?:(source:unknown)=>void
+  filterAction?:(data:any)=>[]
 }
 type IProdCytoscapeState = {
   nodeDetailVisible: boolean
@@ -33,7 +38,9 @@ type IProdCytoscapeState = {
 const { Option } = Select;
 export default class DYDiscover extends Component<IProdCytoscapeProps,IProdCytoscapeState>{
   private cg:any
-  private data
+  private data = []
+  private actions = {}
+  private filterAction = (data:any)=>[]
 
   constructor(props:any) {
     super(props)
@@ -41,53 +48,41 @@ export default class DYDiscover extends Component<IProdCytoscapeProps,IProdCytos
       nodeDetailVisible: false,
       edgeDetailVisible: false,
     }
-    this.data = JSON.parse(props.data)
+    const { edgeTap,nodeTap,cxtEdge, cxtNode,filterAction} = props
+    this.actions = {
+      edgeTap,nodeTap,cxtEdge, cxtNode
+    }
+    this.filterAction = filterAction
+    if(props.data){
+      if(typeof props.data === 'string'){
+        this.data = JSON.parse(props.data)
+      }
+      if(typeof props.data === 'object'){
+        this.data = props.data
+      }
+    }
   }
 
   componentDidMount() {
     this.cg = new CytoscapeGenerator('cy',{
       elements:this.data,
       layout: {name: 'circle'},
-    })
+    },this.actions)
   }
 
   componentWillUnmount() {
     this.cg && this.cg.destroy()
   }
 
-  // nodeTap(evt:any) {
-  //   console.log('nodeTap')
-  // }
-
-  // edgeTap(edge:any) {
-  //   console.log('edgeTap')
-  // }
-
-  // onAfterChange(value:any) {
-  //   console.log(value)
-  //   const rs = filter(this.data, (n:any) => {
-  //     return n.data.value && n.data.value > 1000
-  //   })
-  //   const rsIds = map(rs, (n:any) => {
-  //     return n.data.id
-  //   })
-  //   const datas = filter(this.data, (n:any) => {
-  //     // node
-  //     if (!isUndefined(n.data.value)) {
-  //       return n.data.value <= 1000
-  //     }
-  //     // edge
-  //     if (isUndefined(n.data.value)) {
-  //       return !rsIds.includes(n.data.source) && !rsIds.includes(n.data.target)
-  //     }
-  //     return false
-  //   })
-  //   this.cg.loadData({
-  //     datas,
-  //     layoutType: CytoscapeGenerator.LAYOUT_DAGRE_LR,
-  //     retain: false,
-  //   })
-  // }
+  onAfterChange(value:any) {
+    if(this.filterAction){
+      const data = this.filterAction(value)
+      this.cg.loadData({
+        data,
+        layoutType: 'circle',
+      })
+    }
+  }
 
   zoomIn() {
     this.cg.zoomIn()
@@ -124,9 +119,8 @@ export default class DYDiscover extends Component<IProdCytoscapeProps,IProdCytos
               <FilePdfOutlined className="cytoscape-actions-btn" onClick={()=>{this.exportPdf()}} />
             </div>
             <div className={styles['cytoscape-actions-slider']}>
-              <Slider defaultValue={30}/>
+              <Slider defaultValue={30} onChange={(value:any)=>{this.onAfterChange(value)}}/>
             </div>
-
             <div className={styles['cytoscape-layout']}>
               <Select defaultValue="circle" style={{ width: 120 }} onChange={(type)=>{this.handleLayout(type)}}>
                 <Option value="circle">Circle</Option>

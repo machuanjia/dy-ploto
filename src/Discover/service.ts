@@ -1,7 +1,7 @@
 /*
  * @Author: D.Y
  * @Date: 2021-03-24 14:02:32
- * @LastEditTime: 2021-03-24 19:20:21
+ * @LastEditTime: 2021-03-24 19:59:29
  * @LastEditors: D.Y
  * @FilePath: /dy-ploto/src/Discover/service.ts
  * @Description:
@@ -42,6 +42,7 @@ export class CytoscapeGenerator {
   private container
   private NAME_PROP = 'oriname'
   private MAX_AUTOFIT_ZOOM = 1
+  private actions = {}
   private options:CytoscapeOption = {
     maxZoom: 1e50,
     minZoom: 1e-50,
@@ -204,7 +205,16 @@ export class CytoscapeGenerator {
     },
   }
 
-  constructor(containerId:string, options:CytoscapeOption) {
+  private currentLayout = 0
+  private isCtrlPressed = false
+  private isAltPressed = false
+  private currentNodeTooltip:any
+  private currentZoomLevel = 1
+  private currentPanPosition:any
+  private isTraceMode = false
+  private removed:any
+
+  constructor(containerId:string, options:CytoscapeOption, actions={}) {
     this.container = document.getElementById(containerId)
     this.options = Object.assign(this.options, {
       container: this.container,
@@ -216,6 +226,72 @@ export class CytoscapeGenerator {
   init() {
     this.cy = cytoscape(this.options as any)
     this.cy.fit()
+    this.bindActions()
+  }
+
+  loadData({data = [], layoutType='circle'}) {
+    const zoom = this.currentZoomLevel
+    const pan = this.currentPanPosition
+
+    this.isTraceMode = false
+    this.destroy()
+    this.init()
+    this.cy.add(data)
+    this.layout(layoutType)
+
+  }
+
+  bindActions(){
+    // @ts-ignore
+    const { edgeTap,nodeTap,cxtEdge, cxtNode} = this.actions
+    // 边框点击
+    this.cy.on('tap', 'edge', (source:any) => {
+      edgeTap && edgeTap(source)
+    })
+    // 节点点击
+    this.cy.on('tap', 'node', (source:any) => {
+      nodeTap && nodeTap(source)
+    })
+    // 边框右键
+    this.cy.on('cxttap', 'edge', (source:any) => {
+      if (!this.isTraceMode) {
+        cxtEdge && cxtEdge(source)
+      }
+    })
+    // 节点右键
+    this.cy.on('cxttap', 'node', (source:any) => {
+      console.log(source)
+      if (!this.isTraceMode) {
+        cxtNode && cxtNode(source)
+      }
+    })
+    // 平移动
+    this.cy.on('pan', (event:any) => {
+      console.log(event)
+      if (!this.isTraceMode) {
+        this.currentPanPosition = this.cy.pan()
+      }
+    })
+    // 缩放
+    this.cy.on('zoom', (event:any) => {
+      if (!this.isTraceMode) {
+        this.currentZoomLevel = this.cy.zoom()
+      }
+    })
+
+    // 选中
+    this.cy.on('select', (evt:any) => {
+      const ele = evt.target
+      const elements = this.cy.$('#728105')
+      elements.style({
+        'border-color': '#ffa500',
+        'border-width': '2px',
+        'background-color': '#ffa500',
+        'line-color': '#ffa500',
+        'line-style': 'solid',
+        'target-arrow-color': '#ffa500',
+      })
+    })
   }
 
   destroy() {
@@ -316,20 +392,20 @@ export class CytoscapeGenerator {
   }
 
   makeTippy(node:any, text:any) {
-    return tippy(node.popperRef(), {
-      content() {
-        const div = document.createElement('div')
-        div.innerHTML = text
-        return div
-      },
-      trigger: 'manual',
-      arrow: true,
-      placement: 'bottom',
-      hideOnClick: true,
-      //@ts-ignore
-      multiple: false,
-      sticky: true,
-      appendTo: document.body,
-    })
+    // return tippy(node.popperRef(), {
+    //   content() {
+    //     const div = document.createElement('div')
+    //     div.innerHTML = text
+    //     return div
+    //   },
+    //   trigger: 'manual',
+    //   arrow: true,
+    //   placement: 'bottom',
+    //   hideOnClick: true,
+    //   //@ts-ignore
+    //   multiple: false,
+    //   sticky: true,
+    //   appendTo: document.body,
+    // })
   }
 }
