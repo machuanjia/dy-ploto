@@ -1,12 +1,3 @@
-<!--
- * @Author: D.Y
- * @Date: 2021-03-24 11:50:13
- * @LastEditTime: 2021-03-24 19:16:03
- * @LastEditors: D.Y
- * @FilePath: /dy-ploto/src/Discover/index.md
- * @Description: 
--->
-
 ## Discover
 
 Demo:
