@@ -1,0 +1,40 @@
+.x6-editor {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  height: 800px;
+}
+.x6-editor-header {
+  height: 50px;
+  border-bottom: 1px #f5f7f7 solid;
+  display: flex;
+  align-items: center;
+}
+.x6-editor-body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+.x6-editor-body-tools {
+  width: 260px;
+  border-right: 1px #f5f7f7 solid;
+  position: relative;
+}
+.x6-editor-body-content {
+  flex: 1;
+}
+.x6-editor-body-property {
+  width: 360px;
+  border-left: 1px #f5f7f7 solid;
+}
+.x6-editor-body-minimap {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  z-index: 1000;
+  border: 1px #f5f7f7 solid;
+  right: 10px;
+  bottom: 10px;
+  background: #f0f2f5;
+}
