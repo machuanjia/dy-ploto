@@ -3,13 +3,13 @@ import { Graph } from '@antv/x6'
 import { SimpleNodeView } from './x6.map'
 
 export class X6Editor {
-  private graph
+  private graph:any
   private options: any = {
     container: null,
     width: 800,
     height: 600,
-    grid: true, // 网格
-    background: false, // 背景
+    grid: true,
+    background: false,
     clipboard: true, // 剪切板
     history: true, // 撤销、重做
     selecting: {
@@ -23,11 +23,11 @@ export class X6Editor {
     scroller: true, // 滚动
     resizing: {
       // 节点缩放
-      enabled: true,
+      enabled: false,
     },
     rotating: {
       // 节点旋转
-      enabled: true,
+      enabled: false,
     },
     connecting: {
       // 是否连线
@@ -39,6 +39,12 @@ export class X6Editor {
       allowEdge: true,
       allowPort: true,
       router: 'manhattan',
+      connector: {
+        name: 'rounded',
+        args: {
+          radius: 5,
+        },
+      },
     },
   }
 
@@ -122,6 +128,8 @@ export class X6Editor {
     return this.graph.toJSON()
   }
 
+
+  // toolbar操作函数
   zoomIn() {
     this.graph.zoomTo(this.graph.zoom() + 0.1)
   }
@@ -136,5 +144,9 @@ export class X6Editor {
 
   redo() {
     this.graph.history.redo()
+  }
+
+  deleteNode(){
+    // this.graph
   }
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: D.Y
  * @Date: 2021-01-22 14:56:30
- * @LastEditTime: 2021-03-25 10:40:28
+ * @LastEditTime: 2021-04-12 16:18:01
  * @LastEditors: D.Y
  * @FilePath: /dy-ploto/src/Editor/x6.toolbar.tsx
  * @Description:
@@ -21,18 +21,21 @@ import {
 const { Item } = Toolbar
 const { Group } = Toolbar
 type IX6ToolbarProps = {
-  // xe: any
+  xe: any
 }
 type IX6ToolbarState = unknown
 
 export default class X6ToolbarComponent extends Component<IX6ToolbarProps, IX6ToolbarState> {
   private xe
-  constructor(props) {
+  constructor(props:any) {
     super(props)
-    // this.xe = this.props.xe
+    this.xe = this.props.xe
+  }
+  componentDidUpdate(){
+    this.xe = this.props.xe
   }
   onClick(name: string) {
-    // this.xe[name] && this.xe[name]()
+    this.xe[name] && this.xe[name]()
   }
   render() {
     return (
@@ -46,7 +49,7 @@ export default class X6ToolbarComponent extends Component<IX6ToolbarProps, IX6To
           <Item name="redo" tooltip="Redo (Cmd + Shift + Z)" icon={<RedoOutlined />} />
         </Group>
         <Group>
-          <Item name="delete" icon={<DeleteOutlined />} disabled={true} tooltip="Delete (Delete)" />
+          <Item name="deleteNode" icon={<DeleteOutlined />} disabled={true} tooltip="Delete (Delete)" />
         </Group>
         {/* <Group>
           <Item name="bold" icon={<Icon type="bold" />} active={true} tooltip="Bold (Cmd + B)" />
