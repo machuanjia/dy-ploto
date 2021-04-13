@@ -1,7 +1,7 @@
 /*
  * @Author: D.Y
  * @Date: 2021-03-24 11:45:49
- * @LastEditTime: 2021-03-25 09:48:07
+ * @LastEditTime: 2021-04-13 09:48:34
  * @LastEditors: D.Y
  * @FilePath: /dy-ploto/.umirc.ts
  * @Description:
@@ -16,12 +16,16 @@ export default defineConfig({
   // locales:[['en-US', 'English'], ['zh-CN', '中文']],
   // mode: 'site',
   // more config: https://d.umijs.org/config
+  // theme:{
+  //   '@primary-color':'red'
+  // },
   extraBabelPlugins: [
     [
       'import',
       {
         libraryName: 'antd',
-        style: 'css',
+        libraryDirectory: 'es',
+        style: true,
       },
     ],
   ],
